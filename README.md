@@ -136,7 +136,7 @@ npm run lint
 
 ## License
 
-No license specified. Add your preferred license (e.g., MIT) before distribution.
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ## Support
 
