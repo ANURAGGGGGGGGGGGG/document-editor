@@ -1,0 +1,544 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --editor-surface: #ffffff;
+  --editor-foreground: #000000;
+  --editor-border: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.editor-scroll-container {
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.9), rgba(244, 244, 245, 1));
+}
+
+.editor-page-surface {
+  width: 8.5in;
+  max-width: 100%;
+  min-height: calc(11in - 2in);
+  padding: 1rem;
+  background-color: #ffffff !important;
+  margin: 1.5rem auto;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  background-image: linear-gradient(
+      to bottom,
+      transparent calc(11in - 2px),
+      var(--editor-page-line) calc(11in - 2px),
+      var(--editor-page-line) 11in,
+      transparent 11in
+    );
+  background-size: 100% 11in;
+  background-repeat: repeat-y;
+  box-sizing: border-box;
+}
+
+.editor-page-surface .ProseMirror {
+  background-color: transparent;
+}
+
+.doc-ruler {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.doc-ruler-track {
+  position: relative;
+  height: 42px;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  border-radius: 10px;
+  background:
+    repeating-linear-gradient(
+      to right,
+      rgba(2, 6, 23, 0.08),
+      rgba(2, 6, 23, 0.08) 1px,
+      transparent 1px,
+      transparent 12px
+    ),
+    linear-gradient(to bottom, #ffffff, #fafafa);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(15, 23, 42, 0.06);
+  touch-action: none;
+  user-select: none;
+}
+
+.doc-ruler-margin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgba(148, 163, 184, 0.12);
+  pointer-events: none;
+}
+
+.doc-ruler-margin-left {
+  left: 0;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.doc-ruler-margin-right {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.doc-ruler-content {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  border-radius: 8px;
+  background: rgba(16, 185, 129, 0.06);
+  pointer-events: none;
+}
+
+.doc-ruler-firstline-guide {
+  position: absolute;
+  top: 20px;
+  height: 2px;
+  background: rgba(37, 99, 235, 0.35);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.doc-ruler-tick {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transform: translateX(-0.5px);
+  pointer-events: none;
+}
+
+.doc-ruler-tick-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 20px;
+  background: rgba(2, 6, 23, 0.28);
+}
+
+.doc-ruler-tick-label {
+  position: absolute;
+  top: 22px;
+  left: 6px;
+  font-size: 11px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: rgba(2, 6, 23, 0.62);
+}
+
+.doc-ruler-marker {
+  position: absolute;
+  top: 5px;
+  width: 24px;
+  height: 24px;
+  transform: translateX(-50%);
+  cursor: ew-resize;
+  border: none;
+  background: transparent;
+  padding: 0;
+  outline: none;
+}
+
+.doc-ruler-marker:focus-visible {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+  border-radius: 8px;
+}
+
+.doc-ruler-marker-left {
+  top: 3px;
+}
+
+.doc-ruler-marker-firstline {
+  top: 18px;
+}
+
+.doc-ruler-marker-right {
+  top: 3px;
+}
+
+.doc-ruler-marker-left::before,
+.doc-ruler-marker-right::before,
+.doc-ruler-marker-firstline::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  filter: drop-shadow(0 1px 1px rgba(15, 23, 42, 0.18));
+}
+
+.doc-ruler-marker-left::before,
+.doc-ruler-marker-right::before {
+  top: 2px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 12px solid #0f172a;
+}
+
+.doc-ruler-marker-firstline::before {
+  bottom: 2px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 12px solid #2563eb;
+}
+
+.doc-ruler-marker-left::after,
+.doc-ruler-marker-right::after,
+.doc-ruler-marker-firstline::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background: rgba(2, 6, 23, 0.32);
+  border-radius: 999px;
+}
+
+.doc-ruler-marker-left::after,
+.doc-ruler-marker-right::after {
+  top: 16px;
+  height: 18px;
+}
+
+.doc-ruler-marker-firstline::after {
+  top: -18px;
+  height: 18px;
+  background: rgba(37, 99, 235, 0.32);
+}
+
+.doc-ruler-marker:hover::before {
+  filter: drop-shadow(0 2px 2px rgba(15, 23, 42, 0.22));
+}
+
+.doc-ruler-tooltip {
+  position: absolute;
+  top: -10px;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.92);
+  color: #ffffff;
+  font-size: 11px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 20;
+}
+
+.doc-ruler-tooltip-blue {
+  background: rgba(37, 99, 235, 0.95);
+}
+
+.doc-ruler-legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(2, 6, 23, 0.6);
+}
+
+.color-picker {
+  position: relative;
+}
+
+.color-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid #d4d4d8;
+  background: #ffffff;
+  box-shadow: 0 1px 1px rgba(15, 23, 42, 0.06);
+}
+
+.color-button:hover {
+  box-shadow: 0 2px 3px rgba(15, 23, 42, 0.18);
+}
+
+.color-button-label {
+  display: inline-block;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.color-button-preview {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(2, 6, 23, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.color-popover {
+  position: absolute;
+  top: 36px;
+  right: 20;
+  left: auto;
+  z-index: 20;
+  width: 250px;
+  padding: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.15);
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+}
+
+.color-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+.color-swatch.is-selected {
+  border-color: #0f172a;
+  box-shadow: inset 0 0 0 1px #0f172a;
+}
+
+.color-custom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.color-custom-label {
+  font-size: 11px;
+  color: rgba(2, 6, 23, 0.65);
+}
+
+.color-custom-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-action {
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.color-action:hover {
+  background: #f1f5f9;
+}
+.editor-content {
+  outline: none;
+  font-size: 12pt;
+  line-height: 1.5;
+  color: var(--editor-foreground);
+}
+
+.editor-content.ProseMirror,
+.editor-content .ProseMirror,
+.editor-content.tiptap.ProseMirror {
+  border: 1px solid var(--editor-border) !important;
+  outline: none;
+  box-shadow: none;
+  color: var(--editor-foreground);
+  caret-color: currentColor;
+}
+
+.editor-content h1 {
+  font-size: 24pt;
+  font-weight: 600;
+  margin: 0 0 0.3in;
+}
+
+.editor-content h2 {
+  font-size: 18pt;
+  font-weight: 600;
+  margin: 0.4in 0 0.2in;
+}
+
+.editor-content p {
+  margin: 0 0 0.15in;
+}
+
+.editor-content ul {
+  list-style: disc;
+  list-style-position: outside;
+  padding-left: 0.3in;
+  margin: 0 0 0.15in;
+}
+
+.editor-content ul > li::marker {
+  color: #dc2626;
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+.editor-content ol {
+  list-style: decimal;
+  list-style-position: outside;
+  padding-left: 0.3in;
+  margin: 0 0 0.15in;
+}
+
+.editor-content ol > li::marker {
+  color: #000000;
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+.editor-content li {
+  margin: 0 0 0.05in;
+}
+
+.editor-content li::marker {
+  color: var(--editor-foreground);
+}
+
+.editor-content strong {
+  font-weight: 700;
+}
+
+.editor-content em {
+  font-style: italic;
+}
+
+.text-success {
+  color: #16a34a;
+}
+
+.text-danger {
+  color: #dc2626;
+}
+
+.bg-neutral-primary {
+  background-color: #f9fafb;
+}
+
+.border-success {
+  border-color: #16a34a;
+}
+
+.border-danger {
+  border-color: #dc2626;
+}
+
+.hover\:bg-success:hover {
+  background-color: #16a34a;
+}
+
+.hover\:bg-danger:hover {
+  background-color: #dc2626;
+}
+
+.focus\:ring-neutral-tertiary:focus {
+  box-shadow: 0 0 0 4px #e5e7eb;
+}
+
+.rounded-base {
+  border-radius: 0.375rem;
+}
+
+button.text-success.bg-neutral-primary {
+  background-color: #16a34a;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+button.text-danger.bg-neutral-primary {
+  background-color: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+}
+
+.toolbar-button,
+.font-size-button {
+  transition:
+    background-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 120ms ease;
+}
+
+.toolbar-button:hover,
+.font-size-button:hover {
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.25);
+  transform: translateY(-1px);
+}
+
+.toolbar-button:active,
+.font-size-button:active {
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  transform: translateY(0);
+}
+
+.toolbar-button.is-active {
+  border-color: #020617;
+  box-shadow:
+    inset 0 0 0 1px #000000,
+    0 1px 3px rgba(15, 23, 42, 0.4);
+  transform: translateY(0);
+}
+
+.toolbar-button svg {
+  display: block;
+}
+
+@media print {
+  @page {
+    size: 8.5in 11in;
+    margin: 1in;
+  }
+
+  body {
+    background: #ffffff;
+  }
+
+  .editor-scroll-container {
+    background: #ffffff;
+  }
+
+  .doc-ruler {
+    display: none !important;
+  }
+
+  .editor-page-surface {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    background-image: none;
+    min-height: auto;
+  }
+
+  .editor-content {
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  .editor-content.ProseMirror,
+  .editor-content .ProseMirror,
+  .editor-content.tiptap.ProseMirror {
+    border: none !important;
+  }
+}
